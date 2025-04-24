@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Employee</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, select, button { margin: 10px 0; padding: 10px; width: 100%; max-width: 400px; }
+        .alert { color: white; padding: 10px; margin-bottom: 15px; }
+        .error { background-color: #f44336; }
+        .success { background-color: #4CAF50; }
+        .employee-list { margin-top: 20px; }
+        .employee { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .actions { margin-top: 10px; }
+        .actions form { display: inline; }
+        .search-container { margin-bottom: 20px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h2>Add Employee</h2>
+
+    {% if error %}
+        <div class="alert error">{{ error }}</div>
+    {% endif %}
+
+    {% if message %}
+        <div class="alert success">{{ message }}</div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="aadhar" placeholder="Aadhar Number" required>
+        <input type="text" name="raised_by" placeholder="Raised By" required>
+        <input type="text" name="reason" placeholder="Reason" required>
+        <select name="police_complaint">
+            <option value="no">Police Complaint Logged?</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+        <input type="text" name="fir_number" placeholder="FIR Number (if any)">
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <h3>Search Employees</h3>
+        <input type="text" id="searchQuery" placeholder="Search by Name or Aadhar">
+        <button onclick="searchEmployees()">Search</button>
+    </div>
+
+    <div id="employeeList" class="employee-list">
+        <h3>Existing Employees</h3>
+        {% for emp in employees %}
+            <div class="employee" id="emp-{{ emp.id }}" data-name="{{ emp.name | lower }}" data-aadhar="{{ emp.aadhar_number }}">
+                <strong>Name:</strong> {{ emp.name }}<br>
+                <strong>Aadhar:</strong> {{ emp.aadhar_number }}<br>
+                <strong>Raised By:</strong> {{ emp.raised_by }}<br>
+                <strong>Reason:</strong> {{ emp.reason }}<br>
+                <strong>Complaint Logged:</strong> {{ 'Yes' if emp.police_complaint_logged else 'No' }}<br>
+                {% if emp.fir_number %}
+                    <strong>FIR Number:</strong> {{ emp.fir_number }}<br>
+                {% endif %}
+                <div class="actions">
+                    <form action="{{ url_for('delete_employee', emp_id=emp.id) }}" method="POST" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form action="{{ url_for('edit_employee', emp_id=emp.id) }}" method="GET" style="display:inline;">
+                        <button type="submit">Edit</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function searchEmployees() {
+            var query = document.getElementById('searchQuery').value.toLowerCase(); // Get search input and make it lowercase
+            console.log("Search Query: ", query); // Debugging: Log the search query
+
+            // Get all employee divs
+            var employeeElements = document.querySelectorAll('.employee');
+            console.log("Total Employees Found: ", employeeElements.length); // Debugging: Log total employees
+
+            let found = false; // Track if any employee is found
+
+            employeeElements.forEach(function(emp) {
+                // Extract employee name and Aadhar number from the data attributes
+                var name = emp.getAttribute('data-name'); // Getting name from data-name attribute
+                var aadhar = emp.getAttribute('data-aadhar'); // Getting Aadhar from data-aadhar attribute
+
+                console.log("Employee Name: ", name, " Aadhar: ", aadhar); // Debugging: Log employee name and aadhar
+
+                // If the query matches the name or Aadhar, show the employee, else hide it
+                if (name.includes(query) || aadhar.includes(query)) {
+                    emp.style.display = 'block'; // Show employee
+                    found = true;
+                } else {
+                    emp.style.display = 'none'; // Hide employee
+                }
+            });
+
+            // If no employee found, show a message
+            if (!found) {
+                alert("No employees found for the search query.");
+            }
+        }
+    </script>
+
+</body>
+</html>

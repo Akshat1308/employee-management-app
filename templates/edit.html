@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Employee</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { max-width: 400px; }
+        label, input, select { display: block; margin-bottom: 10px; width: 100%; }
+        button { margin-top: 10px; }
+        .logout { float: right; }
+    </style>
+</head>
+<body>
+
+<h2>Edit Employee</h2>
+<a href="{{ url_for('logout') }}" class="logout">Logout</a>
+
+<form method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" value="{{ employee.name }}" required>
+
+    <label>Aadhar Number:</label>
+    <input type="text" name="aadhar" value="{{ employee.aadhar_number }}" required>
+
+    <label>Raised By:</label>
+    <input type="text" name="raised_by" value="{{ employee.raised_by }}" required>
+
+    <label>Reason:</label>
+    <input type="text" name="reason" value="{{ employee.reason }}" required>
+
+    <label>Police Complaint Logged:</label>
+    <select name="police_complaint">
+        <option value="no" {% if not employee.police_complaint_logged %}selected{% endif %}>No</option>
+        <option value="yes" {% if employee.police_complaint_logged %}selected{% endif %}>Yes</option>
+    </select>
+
+    <label>FIR Number (if any):</label>
+    <input type="text" name="fir_number" value="{{ employee.fir_number or '' }}">
+
+    <button type="submit">Update</button>
+    <a href="{{ url_for('add_employee') }}">Cancel</a>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Employee</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+        }
+        input[type="text"], button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+        .employee {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Search Employee</h2>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Enter name or Aadhar number" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if searched %}
+        {% if result %}
+            <h3>Search Results:</h3>
+            {% for emp in result %}
+            <div class="employee">
+                <strong>Name:</strong> {{ emp.name }}<br>
+                <strong>Aadhar Number:</strong> {{ emp.aadhar_number }}<br>
+                <strong>Raised By:</strong> {{ emp.raised_by }}<br>
+                <strong>Reason:</strong> {{ emp.reason }}<br>
+                <strong>Police Complaint Logged:</strong> {{ 'Yes' if emp.police_complaint_logged else 'No' }}<br>
+                {% if emp.fir_number %}
+                <strong>FIR Number:</strong> {{ emp.fir_number }}
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No employee found.</p>
+        {% endif %}
+    {% endif %}
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
