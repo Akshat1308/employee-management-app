@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///employees.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://employee_management_app_db_user:cUD1kjW6JraawjiQonXiQCcGFd05O4qi@dpg-d051q06uk2gs73e5ssd0-a.oregon-postgres.render.com/employee_management_app_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
